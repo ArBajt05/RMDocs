@@ -138,6 +138,13 @@ private void HandlePlayerToggleVehicleLock(InteractableVehicle vehicle, ref bool
         shouldAllow = false;
         return;
     }
+
+    if (vehicle == null)
+    {
+        shouldAllow = false;
+        return;
+    }
+
     shouldAllow = true;
 
     if (vehicle.isLocked)
