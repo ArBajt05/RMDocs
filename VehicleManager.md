@@ -37,7 +37,6 @@ public class ExamplePlugin : RocketPlugin<ExampleConfiguration>
         // Converting variable player from class Player to unturnedPlayer from clas UnturnedPlayer
         UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromPlayer(player);
 
-        shouldAllow = true; // Allows action
         Logger.Log($"{unturnedPlayer.DisplayName} has entered the vehicle!");
     }
 }
@@ -96,11 +95,9 @@ This event is called when player locks or unlocks the vehicle
 ```csharp
 private void HandlePlayerToggleVehicleLock(InteractableVehicle vehicle, ref bool shouldAllow)
 {
-    // Converts Player.player to unturnedPlayer
-    UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromPlayer(Player.player);
+    Player player = vehicle.passsengers[0].player;
+    UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromPlayer(player);
 
-    // Retrieves the seat number the player is sitting on in the vehicle
-    byte seat = unturnedPlayer.Player.movement.getSeat();
 
     // If the player is in a different position than the drivers it is to cancel further execution of the code
     if (seat != 0)
