@@ -47,10 +47,9 @@ This event is called when player is trying to enter the vehicle.
 ```csharp
 private void HandlePlayerEnterVehicle(Player player, InteractableVehicle vehicle, ref bool shouldAllow)
 {
-   // Converting variable player from class Player to unturnedPlayer from clas UnturnedPlayer
-    UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromPlayer(player);
+    // Converting variable player from class Player to unturnedPlayer from clas UnturnedPlayer
+    UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromPlayer(player); // Allows action
 
-    shouldAllow = true; // Allows action
     UnturnedChat.Say(unturnedPlayer, "You entered the vehicle!");
 }
 ```
@@ -63,7 +62,6 @@ private void HandlePlayerExitVehicle(Player player, InteractableVehicle vehicle,
    // Converting variable player from class Player to unturnedPlayer from clas UnturnedPlayer
     UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromPlayer(player);
 
-    shouldAllow = true; // Allows action
     UnturnedChat.Say(unturnedPlayer, "You exited the vehicle!");
 }
 ```
@@ -75,8 +73,6 @@ private void HandlePlayerSwapSeatInVehicle(Player player, InteractableVehicle ve
 {
    // Converting variable player from class Player to unturnedPlayer from clas UnturnedPlayer
     UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromPlayer(player);
-
-    shouldAllow = true; // Allows action
 
     // Informs the player of the seat change in the car
     if (toSeatIndex == 0) // To driver seat
@@ -95,19 +91,8 @@ This event is called when player locks or unlocks the vehicle
 ```csharp
 private void HandlePlayerToggleVehicleLock(InteractableVehicle vehicle, ref bool shouldAllow)
 {
-    Player player = vehicle.passsengers[0].player;
+    Player player = vehicle.passengers[0].player.player;
     UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromPlayer(player);
-
-
-    // If the player is in a different position than the drivers it is to cancel further execution of the code
-    if (seat != 0)
-    {
-        // Blocks the action and interrupts the execution of the function
-        shouldAllow = false;
-        return;
-    }
-    
-    shouldAllow = true; // Allows action
 
     // Checks if the vehicle is locked
     if (vehicle.isLocked)
