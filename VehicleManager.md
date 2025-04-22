@@ -48,9 +48,23 @@ Called when player is trying to enter the vehicle.
 private void HandlePlayerEnterVehicle(Player player, InteractableVehicle vehicle, ref bool shouldAllow)
 {
    // Converting variable player from class Player to UPlayer from clas UnturnedPlayer
-   UnturnedPlayer UPlayer = UnturnedPlayer.FromPlayer(player);
+      UnturnedPlayer UPlayer = UnturnedPlayer.FromPlayer(player);
 
-   UnturnedChat.Say(UPlayer, "You entered the vehicle!");
+    if (UPlayer == null)
+    {
+        shouldAllow = false;
+        return;
+    }
+
+    if (vehicle == null)
+    {
+        shouldAllow = false;
+        return;
+    }
+
+    UnturnedChat.Say(UPlayer, "You entered the vehicle!");
+
+    shouldAllow = true;
 }
 ```
 
@@ -68,12 +82,13 @@ private void HandlePlayerExitVehicle(Player player, InteractableVehicle vehicle,
         return;
     }
 
-    if(vehicle == null)
+    if (vehicle == null)
     {
         shouldAllow = false;
         return;
     }
 
+    shouldAllow = true;
     UnturnedChat.Say(UPlayer, "You exited the vehicle!");
 }
 ```
@@ -86,6 +101,18 @@ private void HandlePlayerSwapSeatInVehicle(Player player, InteractableVehicle ve
    // Converting variable player from class Player to UPlayer from clas UnturnedPlayer
     UnturnedPlayer UPlayer = UnturnedPlayer.FromPlayer(player);
 
+    if (UPlayer == null)
+    {
+        shouldAllow = false;
+        return;
+    }
+
+    if (vehicle == null)
+    {
+        shouldAllow = false;
+        return;
+    }
+
     if (toSeatIndex == 0)
     {
         UnturnedChat.Say(UPlayer, "You moved to the driver's seat");
@@ -94,6 +121,8 @@ private void HandlePlayerSwapSeatInVehicle(Player player, InteractableVehicle ve
     {
         UnturnedChat.Say(UPlayer, "You moved from the driver's seat to another");
     }
+
+    shouldAllow = true;
 }
 ```
 
@@ -102,8 +131,8 @@ Called when player Toggle Vehicle Lock
 ```csharp
 private void HandlePlayerToggleVehicleLock(InteractableVehicle vehicle, ref bool shouldAllow)
 {
-    UnturnedPlayer uPlayer = Provider.clients.Select(c => UnturnedPlayer.FromSteamPlayer(c)).FirstOrDefault(up => up.Player.movement.getVehicle() == vehicle);
-    if (uPlayer == null)
+    UnturnedPlayer UPlayer = Provider.clients.Select(c => UnturnedPlayer.FromSteamPlayer(c)).FirstOrDefault(up => up.Player.movement.getVehicle() == vehicle);
+    if (UPlayer == null)
     {
         shouldAllow = false;
         return;
