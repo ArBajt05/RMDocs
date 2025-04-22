@@ -48,7 +48,7 @@ Called when player is trying to enter the vehicle.
 private void HandlePlayerEnterVehicle(Player player, InteractableVehicle vehicle, ref bool shouldAllow)
 {
    // Converting variable player from class Player to UPlayer from clas UnturnedPlayer
-      UnturnedPlayer UPlayer = UnturnedPlayer.FromPlayer(player);
+   UnturnedPlayer UPlayer = UnturnedPlayer.FromPlayer(player);
 
     if (UPlayer == null)
     {
@@ -132,6 +132,7 @@ Called when player Toggle Vehicle Lock
 private void HandlePlayerToggleVehicleLock(InteractableVehicle vehicle, ref bool shouldAllow)
 {
     UnturnedPlayer UPlayer = Provider.clients.Select(c => UnturnedPlayer.FromSteamPlayer(c)).FirstOrDefault(up => up.Player.movement.getVehicle() == vehicle);
+
     if (UPlayer == null)
     {
         shouldAllow = false;
