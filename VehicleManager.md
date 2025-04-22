@@ -34,126 +34,92 @@ public class ExamplePlugin : RocketPlugin<ExampleConfiguration>
 
     private void HandlePlayerEnterVehicle(Player player, InteractableVehicle vehicle, ref bool shouldAllow)
     {
-        // Converting variable player from class Player to UPlayer from clas UnturnedPlayer
-        UnturnedPlayer UPlayer = UnturnedPlayer.FromPlayer(player);
+        // Converting variable player from class Player to unturnedPlayer from clas UnturnedPlayer
+        UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromPlayer(player);
 
-        Logger.Log($"{UPlayer.DisplayName} has entered the vehicle!");
+        shouldAllow = true; // Allows action
+        Logger.Log($"{unturnedPlayer.DisplayName} has entered the vehicle!");
     }
 }
 ```
 
 ## onEnterVehicleRequested
-Called when player is trying to enter the vehicle.
+This event is called when player is trying to enter the vehicle.
 ```csharp
 private void HandlePlayerEnterVehicle(Player player, InteractableVehicle vehicle, ref bool shouldAllow)
 {
-   // Converting variable player from class Player to UPlayer from clas UnturnedPlayer
-   UnturnedPlayer UPlayer = UnturnedPlayer.FromPlayer(player);
+   // Converting variable player from class Player to unturnedPlayer from clas UnturnedPlayer
+    UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromPlayer(player);
 
-    if (UPlayer == null)
-    {
-        shouldAllow = false;
-        return;
-    }
-
-    if (vehicle == null)
-    {
-        shouldAllow = false;
-        return;
-    }
-
-    UnturnedChat.Say(UPlayer, "You entered the vehicle!");
-
-    shouldAllow = true;
+    shouldAllow = true; // Allows action
+    UnturnedChat.Say(unturnedPlayer, "You entered the vehicle!");
 }
 ```
 
 ## onExitVehicleRequested
-Called when player is trying to exit the vehicle.
+This event is called when player is trying to exit the vehicle.
 ```csharp
 private void HandlePlayerExitVehicle(Player player, InteractableVehicle vehicle, ref bool shouldAllow, ref Vector3 pendingLocation, ref float pendingYaw)
 {
-   // Converting variable player from class Player to UPlayer from clas UnturnedPlayer
-    UnturnedPlayer UPlayer = UnturnedPlayer.FromPlayer(player);
+   // Converting variable player from class Player to unturnedPlayer from clas UnturnedPlayer
+    UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromPlayer(player);
 
-    if (UPlayer == null)
-    {
-        shouldAllow = false;
-        return;
-    }
-
-    if (vehicle == null)
-    {
-        shouldAllow = false;
-        return;
-    }
-
-    shouldAllow = true;
-    UnturnedChat.Say(UPlayer, "You exited the vehicle!");
+    shouldAllow = true; // Allows action
+    UnturnedChat.Say(unturnedPlayer, "You exited the vehicle!");
 }
 ```
 
 ## onSwapSeatRequested
-Called when player is trying to swap seats in the vehicle.
+This event is called when player is trying to swap seats in the vehicle.
 ```csharp
 private void HandlePlayerSwapSeatInVehicle(Player player, InteractableVehicle vehicle, ref bool shouldAllow, byte fromSeatIndex, ref byte toSeatIndex)
 {
-   // Converting variable player from class Player to UPlayer from clas UnturnedPlayer
-    UnturnedPlayer UPlayer = UnturnedPlayer.FromPlayer(player);
+   // Converting variable player from class Player to unturnedPlayer from clas UnturnedPlayer
+    UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromPlayer(player);
 
-    if (UPlayer == null)
-    {
-        shouldAllow = false;
-        return;
-    }
+    shouldAllow = true; // Allows action
 
-    if (vehicle == null)
+    // Informs the player of the seat change in the car
+    if (toSeatIndex == 0) // To driver seat
     {
-        shouldAllow = false;
-        return;
+        UnturnedChat.Say(unturnedPlayer, "You moved to the driver's seat");
     }
-
-    if (toSeatIndex == 0)
+    else if (fromSeatIndex == 0) // From driver seat
     {
-        UnturnedChat.Say(UPlayer, "You moved to the driver's seat");
+        UnturnedChat.Say(unturnedPlayer, "You moved from the driver's seat to another");
     }
-    else if (fromSeatIndex == 0)
-    {
-        UnturnedChat.Say(UPlayer, "You moved from the driver's seat to another");
-    }
-
-    shouldAllow = true;
 }
 ```
 
 ## OnToggleVehicleLockRequested
-Called when player Toggle Vehicle Lock
+This event is called when player locks or unlocks the vehicle
 ```csharp
 private void HandlePlayerToggleVehicleLock(InteractableVehicle vehicle, ref bool shouldAllow)
 {
-    UnturnedPlayer UPlayer = Provider.clients.Select(c => UnturnedPlayer.FromSteamPlayer(c)).FirstOrDefault(up => up.Player.movement.getVehicle() == vehicle);
+    // Converts Player.player to unturnedPlayer
+    UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromPlayer(Player.player);
 
-    if (UPlayer == null)
+    // Retrieves the seat number the player is sitting on in the vehicle
+    byte seat = unturnedPlayer.Player.movement.getSeat();
+
+    // If the player is in a different position than the drivers it is to cancel further execution of the code
+    if (seat != 0)
     {
+        // Blocks the action and interrupts the execution of the function
         shouldAllow = false;
         return;
     }
+    
+    shouldAllow = true; // Allows action
 
-    if (vehicle == null)
-    {
-        shouldAllow = false;
-        return;
-    }
-
-    shouldAllow = true;
-
+    // Checks if the vehicle is locked
     if (vehicle.isLocked)
     {
-        UnturnedChat.Say(UPlayer, "You opened the vehicle");
+        UnturnedChat.Say(unturnedPlayer, "You opened the vehicle");
     }
     else
     {
-        UnturnedChat.Say(UPlayer, "You closed the vehicle");
+        UnturnedChat.Say(unturnedPlayer, "You closed the vehicle");
     }
 }
 ```
