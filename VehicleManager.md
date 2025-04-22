@@ -1,7 +1,7 @@
 ---
 position: 1
 title: Vehicle Manager
-authors: ArBajt
+authors: ArBajt, Mcrow
 category: developers
 published: true
 description: List of events that be used in Rocket plugins from VehicleManager class.
@@ -54,42 +54,69 @@ private void HandlePlayerEnterVehicle(Player player, InteractableVehicle vehicle
 }
 ```
 
-## OnBeforePlayerConnected
-Called before player joins the server.
+## onExitVehicleRequested
+Called when player is trying to exit the vehicle.
 ```csharp
-private void HandleBeforeConnect(UnturnedPlayer player)
+private void HandlePlayerExitVehicle(Player player, InteractableVehicle vehicle, ref bool shouldAllow, ref Vector3 pendingLocation, ref float pendingYaw)
 {
-    Logger.Log($"Player {player.CharacterName} is connecting...");
-}
-```
+   // Converting variable player from class Player to UPlayer from clas UnturnedPlayer
+    UnturnedPlayer UPlayer = UnturnedPlayer.FromPlayer(player);
 
-## OnPlayerDisconnected
-Called when player leaves server.
-```csharp
-private void HandleDisconnect(UnturnedPlayer player)
-{
-    Logger.Log($"{player.DisplayName} left the server");
-}
-```
-
-## OnPlayerDamaged
-Called when player takes damage.
-```csharp
-private void HandleDamage(UnturnedPlayer player, ref EDeathCause cause, ref ELimb limb, ref UnturnedPlayer killer, ref Vector3 direction, ref float damage, ref float times, ref bool canDamage)
-{
-    if (killer != null)
+    if (UPlayer == null)
     {
-        float totalDamage = damage * times;
-        Logger.Log($"{killer.DisplayName} hit {player.DisplayName} for {totalDamage} damage!");
+        shouldAllow = false;
+        return;
+    }
+
+    if(vehicle == null)
+    {
+        shouldAllow = false;
+        return;
+    }
+
+    UnturnedChat.Say(UPlayer, "You exited the vehicle!");
+}
+```
+
+## onSwapSeatRequested
+Called when player is trying to swap seats in the vehicle.
+```csharp
+private void HandlePlayerSwapSeatInVehicle(Player player, InteractableVehicle vehicle, ref bool shouldAllow, byte fromSeatIndex, ref byte toSeatIndex)
+{
+   // Converting variable player from class Player to UPlayer from clas UnturnedPlayer
+    UnturnedPlayer UPlayer = UnturnedPlayer.FromPlayer(player);
+
+    if (toSeatIndex == 0)
+    {
+        UnturnedChat.Say(UPlayer, "You moved to the driver's seat");
+    }
+    else if (fromSeatIndex == 0)
+    {
+        UnturnedChat.Say(UPlayer, "You moved from the driver's seat to another");
     }
 }
 ```
 
-## OnShutdown
-Called when server begins shutdown.
+## OnToggleVehicleLockRequested
+Called when player Toggle Vehicle Lock
 ```csharp
-private void HandleShutdown()
+private void HandlePlayerToggleVehicleLock(InteractableVehicle vehicle, ref bool shouldAllow)
 {
-    Logger.Log("Server is shutting down!");
+    UnturnedPlayer uPlayer = Provider.clients.Select(c => UnturnedPlayer.FromSteamPlayer(c)).FirstOrDefault(up => up.Player.movement.getVehicle() == vehicle);
+    if (uPlayer == null)
+    {
+        shouldAllow = false;
+        return;
+    }
+    shouldAllow = true;
+
+    if (vehicle.isLocked)
+    {
+        UnturnedChat.Say(UPlayer, "You opened the vehicle");
+    }
+    else
+    {
+        UnturnedChat.Say(UPlayer, "You closed the vehicle");
+    }
 }
 ```
