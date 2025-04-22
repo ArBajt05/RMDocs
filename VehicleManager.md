@@ -91,6 +91,7 @@ This event is called when player locks or unlocks the vehicle
 ```csharp
 private void HandlePlayerToggleVehicleLock(InteractableVehicle vehicle, ref bool shouldAllow)
 {
+    // Gets data about the player in the driver's seat (seat 0) and converts it from Player to UnturnedPlayer
     Player player = vehicle.passengers[0].player.player;
     UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromPlayer(player);
 
