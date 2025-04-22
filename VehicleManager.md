@@ -94,8 +94,9 @@ private void HandlePlayerToggleVehicleLock(InteractableVehicle vehicle, ref bool
     Player player = vehicle.passengers[0].player.player;
     UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromPlayer(player);
 
+    // Event starts before vehicle.isLocked changes value
     // Checks if the vehicle is locked
-    if (vehicle.isLocked)
+    if (vehicle.isLocked && vehicle.isDriver)
     {
         UnturnedChat.Say(unturnedPlayer, "You opened the vehicle");
     }
