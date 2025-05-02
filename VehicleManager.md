@@ -107,3 +107,22 @@ private void HandlePlayerToggleVehicleLock(InteractableVehicle vehicle, ref bool
     }
 }
 ```
+
+## onDamageTireRequested
+This event is called when attempting to damage a vehicle's tire
+```csharp
+private void HandleVehicleTireDamage(CSteamID instigatorSteamID, InteractableVehicle vehicle, int tireIndex, ref bool shouldAllow, EDamageOrigin damageOrigin)
+{
+    // If the source of damage is a melee weapon we block tire damage
+    if (damageOrigin == EDamageOrigin.Useable_Melee)
+    {
+        // We block tire damage
+        shouldAllow = false;
+    }
+    else
+    {
+        // In other cases such as firearms, for example, we allow damage to the tire
+        shouldAllow = true;
+    }
+}
+```
