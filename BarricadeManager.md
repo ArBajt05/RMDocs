@@ -24,20 +24,21 @@ public class ExamplePlugin : RocketPlugin<ExampleConfiguration>
 {
     protected override void Load()
     {
-        VehicleManager.onEnterVehicleRequested += HandlePlayerEnterVehicle;
+        BarricadeManager.OnRepaired += HandlePlayerOnRepairing;
     }
 
     protected override void Unload()
     {
-        VehicleManager.onEnterVehicleRequested -= HandlePlayerEnterVehicle;
+        BarricadeManager.OnRepaired -= HandlePlayerOnRepairing;
     }
 
-    private void HandlePlayerEnterVehicle(Player player, InteractableVehicle vehicle, ref bool shouldAllow)
+    private void HandlePlayerOnRepairing(CSteamID instigatorSteamID, Transform barricadeTransform, float totalHealing)
     {
-        // Converting variable player from class Player to unturnedPlayer from clas UnturnedPlayer
-        UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromPlayer(player);
+        // Convert the CSteamID to an UnturnedPlayer class variable
+        UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromCSteamID(instigatorSteamID);
 
-        Logger.Log($"{unturnedPlayer.DisplayName} has entered the vehicle!");
+        // Informs the player that the barricade is being repaired with information on how much hp it is being repaired for 
+        UnturnedChat.Say(unturnedPlayer ,$"You repaired the barricade for {totalHealing} HP.!", Color.green);
     }
 }
 ```
