@@ -43,27 +43,39 @@ public class ExamplePlugin : RocketPlugin<ExampleConfiguration>
 }
 ```
 
-## onEnterVehicleRequested
-This event is called when player is trying to enter the vehicle.
+## OnRepairRequested
+This event is called when player is trying to repair a barricade.
 ```csharp
-private void HandlePlayerEnterVehicle(Player player, InteractableVehicle vehicle, ref bool shouldAllow)
+private void HandlePlayerRepairRequested(CSteamID instigatorSteamID, Transform barricadeTransform, ref float pendingTotalHealing, ref bool shouldAllow)
 {
-    // Converting variable player from class Player to unturnedPlayer from clas UnturnedPlayer
-    UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromPlayer(player); // Allows action
+    // Convert the CSteamID to an UnturnedPlayer class variable
+    UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromCSteamID(instigatorSteamID);
 
-    UnturnedChat.Say(unturnedPlayer, "You entered the vehicle!");
+    pendingTotalHealing = 25f; // Healing set at 25 hp
+
+    // Informs the player that the barricade is being repaired with information on how much hp it is being repaired for 
+     UnturnedChat.Say(unturnedPlayer, $"You repair a barricade with {pendingTotalHealing} hp", Color.green);
 }
 ```
 
-## onExitVehicleRequested
-This event is called when player is trying to exit the vehicle.
+## onDamageBarricadeRequested
+This event is called when player is trying to make a damage to barricade.
 ```csharp
-private void HandlePlayerExitVehicle(Player player, InteractableVehicle vehicle, ref bool shouldAllow, ref Vector3 pendingLocation, ref float pendingYaw)
+private void HandlePlayerDamageBarricadeRequest(CSteamID instigatorSteamID, Transform barricadeTransform, ref ushort pendingTotalDamage, ref bool shouldAllow, EDamageOrigin damageOrigin)
 {
-   // Converting variable player from class Player to unturnedPlayer from clas UnturnedPlayer
-    UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromPlayer(player);
+    // Convert the CSteamID to an UnturnedPlayer class variable
+    UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromCSteamID(instigatorSteamID);
 
-    UnturnedChat.Say(unturnedPlayer, "You exited the vehicle!");
+    // Check if the source of damage is NOT a Rocket explosion
+    if (damageOrigin != EDamageOrigin.Rocket_Explosion)
+    {
+        shouldAllow = true; // Allow damage from all sources except Rocket explosions
+    }
+    else
+    {
+        shouldAllow = false; // Disallow damage if the damage comes from a Rocket explosion
+        UnturnedChat.Say(unturnedPlayer, "You cannot damage barricades with Rocket explosions!"); // Inform the player that Rocket explosions cannot damage barricades
+    }
 }
 ```
 
