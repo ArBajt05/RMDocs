@@ -165,10 +165,7 @@ private void HandlePlayerBarricadeSpawned(BarricadeRegion region, BarricadeDrop 
     // Convert the owner SteamID (ulong) to an UnturnedPlayer class variable
     UnturnedPlayer player = UnturnedPlayer.FromCSteamID(new CSteamID(owner));
 
-    // Get the barricade ID
-    ushort assetId = drop.asset.id;
-
     // Send a message to the player confirming the barricade placement
-    UnturnedChat.Say(player, $"You placed a barricade with ID: {assetId}", Color.cyan);
+    UnturnedChat.Say(player, $"You placed a barricade", Color.green);
 }
 ```
