@@ -87,14 +87,14 @@ This event is called when player is placing a barricade.
 private void HandlePlayerDeployBarricadeRequest(Barricade barricade, ItemBarricadeAsset asset, Transform hit, ref Vector3 point, ref float angle_x, ref float angle_y, ref float angle_z, ref ulong owner, ref ulong group, ref bool shouldAllow)
 {
     // Convert the owner SteamID (ulong) to an UnturnedPlayer class variable
-    UnturnedPlayer player = UnturnedPlayer.FromCSteamID(new CSteamID(owner));
+    UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromCSteamID(new CSteamID(owner));
 
     // Checks if the barricade being placed is a Metal Wardrobe (ID 1281)
     if (asset.id == 1281)
     {
         // Automatically rotate the barricade with id 1281(Metal Waredrobe) to 90 degrees on the Y axis
         angle_y += 90f;
-        UnturnedChat.Say(player, "You placed a barricade"); // Informs the player that he has placed a barricade.
+        UnturnedChat.Say(unturnedPlayer, "You placed a barricade"); // Informs the player that he has placed a barricade.
     }
 }
 ```
@@ -130,7 +130,7 @@ This event is called when player is trying to transform the barricade for exampl
 private void HandlePlayerTransformBarricadeRequested(CSteamID instigator, byte x, byte y, ushort plant, uint instanceID, ref Vector3 point, ref byte angle_x, ref byte angle_y, ref byte angle_z, ref bool shouldAllow)
 {
     // Convert the CSteamID to an UnturnedPlayer class variable
-    UnturnedPlayer player = UnturnedPlayer.FromCSteamID(instigator);
+    UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromCSteamID(instigator);
 
     // Get the barricade region at the specified map location
     BarricadeRegion region = BarricadeManager.regions[x, y];
@@ -139,17 +139,17 @@ private void HandlePlayerTransformBarricadeRequested(CSteamID instigator, byte x
     BarricadeDrop targetedBarricade = region.drops.FirstOrDefault(d => d.instanceID == instanceID);
 
     // Check if the player is the owner of the barricade
-    if (targetedBarricade.GetServersideData().owner != player.CSteamID.m_SteamID)
+    if (targetedBarricade.GetServersideData().owner != unturnedPlayer.CSteamID.m_SteamID)
     {
         // If the player is not the owner, block the transformation and rotation of the barricade
         shouldAllow = false;
-        UnturnedChat.Say(player, "You are not the owner of this barricade!", Color.red);
+        UnturnedChat.Say(unturnedPlayer, "You are not the owner of this barricade!", Color.red);
     }
     else
     {
         // If the player is the owner, allow the transformation and rotation of the barricade
         shouldAllow = true;
-        UnturnedChat.Say(player, "You moved your barricade.", Color.green);
+        UnturnedChat.Say(unturnedPlayer, "You moved your barricade.", Color.green);
     }
 }
 ```
@@ -163,9 +163,26 @@ private void HandlePlayerBarricadeSpawned(BarricadeRegion region, BarricadeDrop 
     ulong owner = drop.GetServersideData().owner;
 
     // Convert the owner SteamID (ulong) to an UnturnedPlayer class variable
-    UnturnedPlayer player = UnturnedPlayer.FromCSteamID(new CSteamID(owner));
+    UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromCSteamID(new CSteamID(owner));
 
     // Send a message to the player confirming the barricade placement
-    UnturnedChat.Say(player, $"You placed a barricade", Color.green);
+    UnturnedChat.Say(unturnedPlayer, $"You placed a barricade", Color.green);
+}
+```
+
+## onModifySignRequested
+This event is called when player tries to change the text on the sign
+```csharp
+private void HandlePlayerModifySignRequested(CSteamID instigator, InteractableSign sign, ref string text, ref bool shouldAllow)
+{
+    // Convert the CSteamID to an UnturnedPlayer class variable
+    UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromCSteamID(instigator);
+
+    // Check if the sign's current text contains the word "unturned"
+    if (sign.text.ToLower().Contains("unturned"))
+    {
+        // Send a message to the player that sign contains the word "Unturned"
+        UnturnedChat.Say(unturnedPlayer, "Sign contains text 'Unturned'");
+    }
 }
 ```
