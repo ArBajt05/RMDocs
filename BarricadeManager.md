@@ -153,3 +153,22 @@ private void HandlePlayerTransformBarricadeRequested(CSteamID instigator, byte x
     }
 }
 ```
+
+## onBarricadeSpawned
+This event is called when the barricade will be put up
+```csharp
+private void HandlePlayerBarricadeSpawned(BarricadeRegion region, BarricadeDrop drop)
+{
+    // Get the SteamID of the player who owns the barricade.
+    ulong owner = drop.GetServersideData().owner;
+
+    // Convert the owner SteamID (ulong) to an UnturnedPlayer class variable
+    UnturnedPlayer player = UnturnedPlayer.FromCSteamID(new CSteamID(owner));
+
+    // Get the barricade ID
+    ushort assetId = drop.asset.id;
+
+    // Send a message to the player confirming the barricade placement
+    UnturnedChat.Say(player, $"You placed a barricade with ID: {assetId}", Color.cyan);
+}
+```
