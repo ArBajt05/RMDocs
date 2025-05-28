@@ -13,10 +13,12 @@ List of events that be used in Rocket plugins from [BarricadeManager]() class.
 - Always unsubscribe in `Unload()` to prevent memory leaks
 - Event handlers must match the exact signature of the event
 - Use `ref` parameters when required by the event signature
-- `using Steamworks;` is required
-- `using SDG.Unturned;` is required
-- `using Rocket.Unturned.Player;` is required
 - `using Rocket.Core.Plugins;` is required
+- `using Rocket.Unturned.Chat;` is required
+- `using Rocket.Unturned.Player;` is required
+- `using SDG.Unturned;` is required
+- `using Steamworks;` is required
+- `using UnityEngine;` is required
 
 ## Quick Example
 ```csharp
@@ -79,22 +81,20 @@ private void HandlePlayerDamageBarricadeRequest(CSteamID instigatorSteamID, Tran
 }
 ```
 
-## onSwapSeatRequested
-This event is called when player is trying to swap seats in the vehicle.
+## onDeployBarricadeRequested
+This event is called when player is placing a barricade.
 ```csharp
-private void HandlePlayerSwapSeatInVehicle(Player player, InteractableVehicle vehicle, ref bool shouldAllow, byte fromSeatIndex, ref byte toSeatIndex)
+private void HandlePlayerDeployBarricadeRequest(Barricade barricade, ItemBarricadeAsset asset, Transform hit, ref Vector3 point, ref float angle_x, ref float angle_y, ref float angle_z, ref ulong owner, ref ulong group, ref bool shouldAllow)
 {
-   // Converting variable player from class Player to unturnedPlayer from clas UnturnedPlayer
-    UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromPlayer(player);
+    // Convert the owner SteamID (ulong) to an UnturnedPlayer class variable
+    UnturnedPlayer player = UnturnedPlayer.FromCSteamID(new CSteamID(owner));
 
-    // Informs the player of the seat change in the car
-    if (toSeatIndex == 0) // To driver seat
+    // Checks if the barricade being placed is a Metal Wardrobe (ID 1281)
+    if (asset.id == 1281)
     {
-        UnturnedChat.Say(unturnedPlayer, "You moved to the driver's seat");
-    }
-    else if (fromSeatIndex == 0) // From driver seat
-    {
-        UnturnedChat.Say(unturnedPlayer, "You moved from the driver's seat to another");
+        // Automatically rotate the barricade with id 1281(Metal Waredrobe) to 90 degrees on the Y axis
+        angle_y += 90f;
+        UnturnedChat.Say(player, "You placed a barricade"); // Informs the player that he has placed a barricade.
     }
 }
 ```
