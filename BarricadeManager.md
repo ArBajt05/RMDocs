@@ -94,7 +94,7 @@ private void HandlePlayerDeployBarricadeRequest(Barricade barricade, ItemBarrica
     {
         // Automatically rotate the barricade with id 1281(Metal Waredrobe) to 90 degrees on the Y axis
         angle_y += 90f;
-        UnturnedChat.Say(unturnedPlayer, "You placed a barricade"); // Informs the player that he has placed a barricade.
+        UnturnedChat.Say(unturnedPlayer, "You placed a barricade with custom rotation"); // Informs the player that he has placed a barricade.
     }
 }
 ```
@@ -178,11 +178,16 @@ private void HandlePlayerModifySignRequested(CSteamID instigator, InteractableSi
     // Convert the CSteamID to an UnturnedPlayer class variable
     UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromCSteamID(instigator);
 
-    // Check if the sign's current text contains the word "unturned"
-    if (sign.text.ToLower().Contains("unturned"))
+    // Check if text is not empty or whitespace
+    if (!string.IsNullOrEmpty(text) || !string.IsNullOrWhiteSpace(text))
     {
-        // Send a message to the player that sign contains the word "Unturned"
-        UnturnedChat.Say(unturnedPlayer, "Sign contains text 'Unturned'");
+        // Notify player about sign content
+        UnturnedChat.Say(unturnedPlayer, $"Sign contains text: '{text}'", Color.green);
+    }
+    else
+    {
+        // Notify player about empty sign
+        UnturnedChat.Say(unturnedPlayer, "Your sign is empty!", Color.red);
     }
 }
 ```
