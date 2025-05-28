@@ -124,21 +124,32 @@ private void HandlePlayerOpenStorageRequested(CSteamID instigator, InteractableS
 }
 ```
 
-## onDamageTireRequested
-This event is called when attempting to damage a vehicle's tire
+## onTransformRequested
+This event is called when player is trying to transform the barricade for example in Edit Mode(Shift + F1, then Shift + F6)
 ```csharp
-private void HandleVehicleTireDamage(CSteamID instigatorSteamID, InteractableVehicle vehicle, int tireIndex, ref bool shouldAllow, EDamageOrigin damageOrigin)
+private void HandlePlayerTransformBarricadeRequested(CSteamID instigator, byte x, byte y, ushort plant, uint instanceID, ref Vector3 point, ref byte angle_x, ref byte angle_y, ref byte angle_z, ref bool shouldAllow)
 {
-    // If the source of damage is a melee weapon we block tire damage
-    if (damageOrigin == EDamageOrigin.Useable_Melee)
+    // Convert the CSteamID to an UnturnedPlayer class variable
+    UnturnedPlayer player = UnturnedPlayer.FromCSteamID(instigator);
+
+    // Get the barricade region at the specified map location
+    BarricadeRegion region = BarricadeManager.regions[x, y];
+
+    // Search for the barricade in this region using the instance ID
+    BarricadeDrop targetedBarricade = region.drops.FirstOrDefault(d => d.instanceID == instanceID);
+
+    // Check if the player is the owner of the barricade
+    if (targetedBarricade.GetServersideData().owner != player.CSteamID.m_SteamID)
     {
-        // We block tire damage
+        // If the player is not the owner, block the transformation and rotation of the barricade
         shouldAllow = false;
+        UnturnedChat.Say(player, "You are not the owner of this barricade!", Color.red);
     }
     else
     {
-        // In other cases such as firearms, for example, we allow damage to the tire
+        // If the player is the owner, allow the transformation and rotation of the barricade
         shouldAllow = true;
+        UnturnedChat.Say(player, "You moved your barricade.", Color.green);
     }
 }
 ```
