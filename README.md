@@ -1,4 +1,16 @@
 # RocketMod Docs
-- Unturned VehicleManager Class
-- Unturned BarricadeManager Class
-- Unturned ResourceManager Class
+- Unturned VehicleManager Class 🔜 SOON!
+- Unturned BarricadeManager Class ✅ COMPLETED!
+- Unturned ResourceManager Class ✅ COMPLETED!
+- Unturned ChatManager Class
+- Unturned EffectManager Class
+- Unturned ItemManager Class
+- Unturned LevelManager Class
+- Unturned LightingManager Class
+- Unturned StructureManager Class
+- Unturned UseableConsumeable Class
+- Unturned UseableGun Class
+- Unturned UseableThrowable Class
+- Unturned UseableTire Class
+- Unturned UseableVehiclePaint Class
+- Unturned DamageTool Class
