@@ -99,24 +99,27 @@ private void HandlePlayerDeployBarricadeRequest(Barricade barricade, ItemBarrica
 }
 ```
 
-## OnToggleVehicleLockRequested
-This event is called when player locks or unlocks the vehicle
+## onOpenStorageRequested
+This event is called when player opens a storage
 ```csharp
-private void HandlePlayerToggleVehicleLock(InteractableVehicle vehicle, ref bool shouldAllow)
+private void HandlePlayerOpenStorageRequested(CSteamID instigator, InteractableStorage storage, ref bool shouldAllow)
 {
-    // Finds the player in the driver's seat (seat 0) and converts it from the Player class to UnturnedPlayer
-    Player player = vehicle.passengers[0].player.player;
-    UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromPlayer(player);
+    // Convert the CSteamID to an UnturnedPlayer class variable
+    UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromCSteamID(instigator);
 
-    // Event starts before vehicle.isLocked changes value
-    // Checks if the vehicle is locked
-    if (vehicle.isLocked && vehicle.isDriver)
+    // Finds the storage based on it's transform
+    BarricadeDrop drop = BarricadeManager.FindBarricadeByRootTransform(storage.transform);
+
+    // Check if the player is the owner of the storage
+    if (drop.GetServersideData().owner != unturnedPlayer.CSteamID.m_SteamID)
     {
-        UnturnedChat.Say(unturnedPlayer, "You opened the vehicle");
+        shouldAllow = false; // Deny access
+        UnturnedChat.Say(unturnedPlayer, "You are not the owner of this storage!", Color.red);
     }
     else
     {
-        UnturnedChat.Say(unturnedPlayer, "You closed the vehicle");
+        shouldAllow = true; // Allow access
+        UnturnedChat.Say(unturnedPlayer, "You opened your storage.", Color.green);
     }
 }
 ```
