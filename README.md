@@ -1,5 +1,5 @@
 # RocketMod Docs
-- Unturned VehicleManager Class 🔜 SOON!
+- Unturned VehicleManager Class ✅ COMPLETED!
 - Unturned BarricadeManager Class ✅ COMPLETED!
 - Unturned ResourceManager Class ✅ COMPLETED!
 - Unturned ChatManager Class
