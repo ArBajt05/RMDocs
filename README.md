@@ -11,6 +11,6 @@
 - Unturned UseableConsumeable Class
 - Unturned UseableGun Class
 - Unturned UseableThrowable Class
-- Unturned UseableTire Class
+- Unturned UseableTire Class ✅ COMPLETED!
 - Unturned UseableVehiclePaint Class
 - Unturned DamageTool Class
