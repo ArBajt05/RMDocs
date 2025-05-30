@@ -2,9 +2,9 @@
 - Unturned VehicleManager Class ✅ COMPLETED!
 - Unturned BarricadeManager Class ✅ COMPLETED!
 - Unturned ResourceManager Class ✅ COMPLETED!
-- Unturned ChatManager Class 🔜 SOON!
+- Unturned ChatManager Class ✅ COMPLETED!
 - Unturned EffectManager Class
-- Unturned ItemManager Class
+- Unturned ItemManager Class ✅ COMPLETED!
 - Unturned LevelManager Class
 - Unturned LightingManager Class
 - Unturned StructureManager Class
