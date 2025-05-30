@@ -90,3 +90,28 @@ private void HandleServerFormattingChatMessage(SteamPlayer speaker, EChatMode mo
   text = text.Replace("fuck", "This is a very bad word :(");
 }
 ```
+
+## onServerSendingMessage
+This event is called when the server sends a chat message to each player.
+```csharp
+private void HandleServerSendingChatMessage(ref string text, ref Color color, SteamPlayer fromPlayer, SteamPlayer toPlayer, EChatMode mode, ref string iconURL, ref bool useRichTextFormatting)
+{
+  // Converting variable fromPlayer from class SteamPlayer to unturnedSender from clas UnturnedPlayer
+  UnturnedPlayer unturnedSender = UnturnedPlayer.FromSteamPlayer(fromPlayer);
+
+  // If sender has chat.vip permission, set message color to cyan
+  if (unturnedSender.HasPermission("chat.vip"))
+  {
+    color = Color.cyan;
+  }
+
+  // Example: Add an icon URL if sender has permission chat.icon
+  if (unturnedSender.HasPermission("chat.icon"))
+  {
+    iconURL = "https://example.com/vip_icon.png";
+  }
+
+  // Enable rich text formatting
+  useRichTextFormatting = true;
+}
+```
