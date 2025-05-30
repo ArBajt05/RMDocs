@@ -52,17 +52,41 @@ public class ExamplePlugin : RocketPlugin
 }
 ```
 
-## OnRepairRequested
-This event is called when player is trying to repair a barricade.
+## onCheckPermissions
+This event is called just before command typed by a player in chat is executed
 ```csharp
-private void HandlePlayerRepairRequested(CSteamID instigatorSteamID, Transform barricadeTransform, ref float pendingTotalHealing, ref bool shouldAllow)
+private void HandleCheckPermissions(SteamPlayer player, string text, ref bool shouldExecuteCommand, ref bool shouldList)
 {
-    // Convert the CSteamID to an UnturnedPlayer class variable
-    UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromCSteamID(instigatorSteamID);
+  // Converting variable player from class SteamPlayer to unturnedPlayer from clas UnturnedPlayer
+  UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromSteamPlayer(player);
 
-    pendingTotalHealing = 25f; // Healing set at 25 hp
+  // Check if the command is /kill and the player doesn't have permission
+  if (text.StartsWith("/kill") && !unturnedPlayer.HasPermission("permission.allowkill"))
+  {
+    // Prevent the command from executing
+    shouldExecuteCommand = false;
 
-    // Informs the player that the barricade is being repaired with information on how much hp it is being repaired for 
-     UnturnedChat.Say(unturnedPlayer, $"You repair a barricade with {pendingTotalHealing} hp", Color.green);
+    // Hide the command from the command list
+    shouldList = false;
+
+    // Send a message to the player
+    UnturnedChat.Say(unturnedPlayer, "You don't have permission to use this command!", Color.red);
+  }
+}
+```
+
+## onServerFormattingMessage
+This event is called before sending a chat message in one of the specified categories such as GLOBAL, GROUP, LOCAL, for example
+```csharp
+private void HandleServerFormattingChatMessage(SteamPlayer speaker, EChatMode mode, ref string text)
+{
+  // Add [GROUP CHAT] prefix if the message is sent in GROUP chat mode
+  if (mode == EChatMode.GROUP)
+  {
+  text = "[GROUP CHAT] " + text;
+  }
+
+  // Replace the word "fuck" with "This is a very bad word :(" to filter inappropriate language
+  text = text.Replace("fuck", "This is a very bad word :(");
 }
 ```
