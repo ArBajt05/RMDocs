@@ -108,7 +108,7 @@ private void HandleServerSendingChatMessage(ref string text, ref Color color, St
   // Example: Add an icon URL if sender has permission chat.icon
   if (unturnedSender.HasPermission("chat.icon"))
   {
-    iconURL = "https://example.com/vip_icon.png";
+    iconURL = "https://imgur.com/EcVfadY.png"; // Always remember about .png at the end of link
   }
 
   // Enable rich text formatting
