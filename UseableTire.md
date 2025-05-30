@@ -38,8 +38,7 @@ public class ExamplePlugin : RocketPlugin
     UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromCSteamID(useable.player.channel.owner.playerID.steamID);
 
     /* or you can use this instead to convert:
-    *    Player player = useable.player;
-    *    UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromPlayer(player);
+    *    UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromPlayer(useable.player);
     */
 
     // Prevent removing or attaching tires on locked vehicles
