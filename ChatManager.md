@@ -83,7 +83,7 @@ private void HandleServerFormattingChatMessage(SteamPlayer speaker, EChatMode mo
   // Add [GROUP CHAT] prefix if the message is sent in GROUP chat mode
   if (mode == EChatMode.GROUP)
   {
-  text = "[GROUP CHAT] " + text;
+    text = "[GROUP CHAT] " + text;
   }
 
   // Replace the word "fuck" with "This is a very bad word :(" to filter inappropriate language
